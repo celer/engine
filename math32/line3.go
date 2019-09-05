@@ -19,6 +19,42 @@ func NewLine3(start, end *Vector3) *Line3 {
 	return l
 }
 
+// OperateOnVertices iterates over all the vertices and calls
+// the specified callback function with a pointer to each vertex.
+// The vertex pointers can be modified inside the callback and
+// the modifications will be applied to the triangle at each iteration.
+// The callback function returns false to continue or true to break.
+func (t *Line3) OperateOnVertices(cb func(vertex *Vector3) bool) {
+	if cb(&t.start) == true {
+		return
+	}
+	if cb(&t.end) == true {
+		return
+	}
+}
+
+// ReadVertices iterates over all the vertices and calls
+// the specified callback function with the value of each vertex.
+// The callback function returns false to continue or true to break.
+func (t *Line3) ReadVertices(cb func(vertex Vector3) bool) {
+	if cb(t.start) == true {
+		return
+	}
+	if cb(t.end) == true {
+		return
+	}
+}
+
+// Returns the start point for the line
+func (l *Line3) Start() *Vector3 {
+	return &l.start
+}
+
+// Returns the end point for the line
+func (l *Line3) End() *Vector3 {
+	return &l.end
+}
+
 // Set sets this line segment start and end points.
 // Returns pointer to this updated line segment.
 func (l *Line3) Set(start, end *Vector3) *Line3 {

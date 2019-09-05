@@ -22,6 +22,64 @@ func NewPlane(normal *Vector3, constant float32) *Plane {
 	return p
 }
 
+// PlaneOrientation is used to denote the orientation of some other entity relative to this plane
+type PlaneOrientation int8
+
+const (
+	COINCIDENT PlaneOrientation = 0
+	BACK                        = -1
+	FRONT                       = 1
+	SPANNING                    = 2
+)
+
+// Returns the orientation of a point relative to the plane
+func (p *Plane) PointOrientation(v *Vector3) PlaneOrientation {
+	d := p.normal.X*v.X + p.normal.Y*v.Y + p.normal.Z*v.Z
+	if d < p.constant {
+		return BACK
+	} else if d > p.constant {
+		return FRONT
+	}
+	return COINCIDENT
+}
+
+// Returns the orientation of a triangle relative to the plane
+func (p *Plane) TriangleOrientation(t *Triangle) PlaneOrientation {
+	oA := p.PointOrientation(&t.a)
+	oB := p.PointOrientation(&t.b)
+	oC := p.PointOrientation(&t.c)
+
+	if oA == oB && oB == oC {
+		return oA
+	} else {
+		return SPANNING
+	}
+
+}
+
+// Returns the orientation of a line relative to the plane
+func (p *Plane) LineOrientation(l *Line3) PlaneOrientation {
+	s := p.PointOrientation(&l.start)
+	e := p.PointOrientation(&l.end)
+
+	if s == e {
+		return s
+	} else {
+		return SPANNING
+	}
+
+}
+
+// Gets the normal associated with this plane
+func (p *Plane) Normal() Vector3 {
+	return p.normal
+}
+
+// Gets the constant associated with this plane
+func (p *Plane) Constant() float32 {
+	return p.constant
+}
+
 // Set sets this plane normal vector and constant.
 // Returns pointer to this updated plane.
 func (p *Plane) Set(normal *Vector3, constant float32) *Plane {

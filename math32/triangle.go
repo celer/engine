@@ -27,6 +27,53 @@ func NewTriangle(a, b, c *Vector3) *Triangle {
 	return t
 }
 
+//Return the a point of this triangle
+func (t *Triangle) A() *Vector3 {
+	return &t.a
+}
+
+//Return the b point of this triangle
+func (t *Triangle) B() *Vector3 {
+	return &t.b
+}
+
+//Return the C point of this triangle
+func (t *Triangle) C() *Vector3 {
+	return &t.c
+}
+
+// OperateOnVertices iterates over all the vertices and calls
+// the specified callback function with a pointer to each vertex.
+// The vertex pointers can be modified inside the callback and
+// the modifications will be applied to the triangle at each iteration.
+// The callback function returns false to continue or true to break.
+func (t *Triangle) OperateOnVertices(cb func(vertex *Vector3) bool) {
+	if cb(&t.a) == true {
+		return
+	}
+	if cb(&t.b) == true {
+		return
+	}
+	if cb(&t.c) == true {
+		return
+	}
+}
+
+// ReadVertices iterates over all the vertices and calls
+// the specified callback function with the value of each vertex.
+// The callback function returns false to continue or true to break.
+func (t *Triangle) ReadVertices(cb func(vertex Vector3) bool) {
+	if cb(t.a) == true {
+		return
+	}
+	if cb(t.b) == true {
+		return
+	}
+	if cb(t.c) == true {
+		return
+	}
+}
+
 // Normal returns the triangle's normal.
 func Normal(a, b, c, optionalTarget *Vector3) *Vector3 {
 
